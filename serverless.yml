@@ -1,0 +1,42 @@
+service: cstgrph
+
+provider:
+  name: aws
+  runtime: go1.x
+  stage:  ${opt:stage, 'dev'}
+  region: ap-northeast-1
+  environment:
+    SLACK_TOKEN: ${opt:token}
+    SLACK_CHANNEL_ID: ${opt:channel}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:ListBucket"
+      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+    - Effect: "Allow"
+      Action:
+        - "s3:PutObject"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - "Ref" : "ServerlessDeploymentBucket"
+            - "/*"
+    - Effect: "Allow"
+      Action:
+        - "ce:GetCostAndUsage"
+      Resource: "*"
+      
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bin/**
+
+functions:
+  main:
+    handler: bin/main
+    memorySize: 256
+    events:
+      - schedule: cron(0 23 ? * SUN *)
+
