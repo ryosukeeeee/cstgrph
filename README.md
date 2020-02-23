@@ -1,5 +1,9 @@
 ## AWS CostAndUsage Monitor
 
+過去1週間分のコストと内訳を積み上げ棒グラフにしてSlackに投稿する。
+
+![barchart](https://user-images.githubusercontent.com/45306151/75106236-8a45d100-565d-11ea-9f6d-d3347081ffe0.png)
+
 ### 設定
 Makefileの2行目、３行目を書き換える
 
